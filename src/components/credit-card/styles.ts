@@ -1,11 +1,10 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   card: {
     width: "100%",
     height: 200,
     borderRadius: 12,
-    padding: 24,
     justifyContent: "space-between",
   },
   front: {
@@ -18,11 +17,29 @@ export const styles = StyleSheet.create({
     width: "100%",
     backfaceVisibility: "hidden",
     backgroundColor: "#BAC1C7",
+    justifyContent: "flex-end",
   },
   header: {
+    padding: 24,
     flexDirection: "row",
     alignItems: "center",
     gap: 7,
+  },
+  chip: {
+    position: "absolute",
+    top: "40%",
+    left: "10%",
+    width: "15%",
+    height: 40,
+    backgroundColor: "#8795A0",
+    borderRadius: 8,
+  },
+  cardLine: {
+    top: 40,
+    position: "absolute",
+    width: "100%",
+    height: 50,
+    backgroundColor: "#E4ECF3",
   },
   circle: {
     width: 24,
@@ -37,6 +54,7 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   footer: {
+    padding: 24,
     flexDirection: "row",
     justifyContent: "space-between",
   },
@@ -58,4 +76,4 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-})
+});

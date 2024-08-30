@@ -1,12 +1,7 @@
-import { View, Text } from "react-native"
+import { View, Text } from "react-native";
 
-import { styles } from "./styles"
-import Animated, {
-  SharedValue,
-  interpolate,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated"
+import { styles } from "./styles";
+import Animated, { SharedValue, interpolate, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 export enum CARD_SIDE {
   front = 0,
@@ -14,22 +9,19 @@ export enum CARD_SIDE {
 }
 
 type CreditCardProps = {
-  cardSide: SharedValue<number>
+  cardSide: SharedValue<number>;
   data: {
-    name: string
-    number: string
-    date: string
-    code: string
-  }
-}
+    cardName: string;
+    name: string;
+    number: string;
+    date: string;
+    code: string;
+  };
+};
 
 export function CreditCard({ cardSide, data }: CreditCardProps) {
   const frontAnimatedStyles = useAnimatedStyle(() => {
-    const rotateValue = interpolate(
-      cardSide.value,
-      [CARD_SIDE.front, CARD_SIDE.back],
-      [0, 180]
-    )
+    const rotateValue = interpolate(cardSide.value, [CARD_SIDE.front, CARD_SIDE.back], [0, 180]);
 
     return {
       transform: [
@@ -37,15 +29,11 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
           rotateY: withTiming(`${rotateValue}deg`, { duration: 1000 }),
         },
       ],
-    }
-  })
+    };
+  });
 
   const backAnimatedStyles = useAnimatedStyle(() => {
-    const rotateValue = interpolate(
-      cardSide.value,
-      [CARD_SIDE.front, CARD_SIDE.back],
-      [180, 360]
-    )
+    const rotateValue = interpolate(cardSide.value, [CARD_SIDE.front, CARD_SIDE.back], [180, 360]);
 
     return {
       transform: [
@@ -53,17 +41,16 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
           rotateY: withTiming(`${rotateValue}deg`, { duration: 1000 }),
         },
       ],
-    }
-  })
+    };
+  });
 
   return (
     <View>
       <Animated.View style={[styles.card, styles.front, frontAnimatedStyles]}>
         <View style={styles.header}>
-          <View style={[styles.circle, styles.logo]} />
-          <Text>Meu Cartão</Text>
+          <Text>{data.cardName}</Text>
         </View>
-
+        <View style={[styles.chip]} />
         <View style={styles.footer}>
           <Text style={styles.name}>{data.name}</Text>
 
@@ -75,12 +62,14 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
       </Animated.View>
 
       <Animated.View style={[styles.card, styles.back, backAnimatedStyles]}>
-        <View>
-          <Text style={styles.label}>Número do cartão</Text>
-          <Text style={styles.value}>{data.number}</Text>
-        </View>
+        <View style={styles.cardLine} />
 
         <View style={styles.footer}>
+          <View>
+            <Text style={styles.label}>Número do cartão</Text>
+            <Text style={styles.value}>{data.number}</Text>
+          </View>
+
           <View>
             <Text style={styles.label}>Validade</Text>
             <Text style={styles.value}>{data.date}</Text>
@@ -93,5 +82,5 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
         </View>
       </Animated.View>
     </View>
-  )
+  );
 }
