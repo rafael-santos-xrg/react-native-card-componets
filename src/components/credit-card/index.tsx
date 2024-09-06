@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 
 import { styles } from "./styles";
 import Animated, { SharedValue, interpolate, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { getCreditCardType } from "@/models/creditCardSpec";
 
 export enum CARD_SIDE {
   front = 0,
@@ -20,6 +21,25 @@ type CreditCardProps = {
 };
 
 export function CreditCard({ cardSide, data }: CreditCardProps) {
+  function insertSpaces(targetString: string, gapsList: number[]) {
+    let result = targetString;
+    gapsList.forEach((gap, index) => {
+      const position = gap + index;
+      if (position < result.length) {
+        result = result.slice(0, position) + " " + result.slice(position);
+      }
+    });
+    return result;
+  }
+  const normalizedName = () => {
+    return data.name.toUpperCase();
+  };
+
+  const normalizedNumber = () => {
+    const cardGaps = getCreditCardType(data.number).gaps;
+    return insertSpaces(data.number, cardGaps);
+  };
+
   const frontAnimatedStyles = useAnimatedStyle(() => {
     const rotateValue = interpolate(cardSide.value, [CARD_SIDE.front, CARD_SIDE.back], [0, 180]);
 
@@ -52,7 +72,7 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
         </View>
         <View style={[styles.chip]} />
         <View style={styles.footer}>
-          <Text style={styles.name}>{data.name}</Text>
+          <Text style={styles.name}>{normalizedName()}</Text>
 
           <View style={styles.flag}>
             <View style={[styles.circle, styles.red]} />
@@ -67,7 +87,7 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
         <View style={styles.footer}>
           <View>
             <Text style={styles.label}>Número do cartão</Text>
-            <Text style={styles.value}>{data.number}</Text>
+            <Text style={styles.value}>{normalizedNumber()}</Text>
           </View>
 
           <View>

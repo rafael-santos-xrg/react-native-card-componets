@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#8795A0",
   },
   name: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
   },
   footer: {
@@ -69,11 +69,11 @@ export const styles = StyleSheet.create({
     backgroundColor: "orange",
   },
   label: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#4F5F64",
   },
   value: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
   },
 });
