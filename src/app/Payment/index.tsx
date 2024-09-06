@@ -17,9 +17,15 @@ export function Payment() {
   const [code, setCode] = useState("");
   const [icon, setIcon] = useState<"flip-to-front" | "flip-to-back">("flip-to-back");
   const [touchableText, setTouchableText] = useState<"Ver Verso" | "Ver Frente">("Ver Verso");
-  const [dateValue, setDateValue] = useState("");
+  const [numberLength, setNumberLength] = useState<number>(1);
+  const [codeLength, setCodeLength] = useState<number>(3);
+  const [codeName, setCodeName] = useState<string>("CVV");
 
   const cardSide = useSharedValue(CARD_SIDE.front);
+
+  const cardInfo = getCreditCardType(number);
+
+  console.log(cardInfo);
 
   function handleFlipCard() {
     if (cardSide.value === CARD_SIDE.front) {
@@ -43,6 +49,7 @@ export function Payment() {
 
   function handleMaskDateInput(dateValue: string) {
     let cleaned = dateValue.replace(/[^0-9]/g, "");
+    const regexMonth = /^(0[1-9]|1[0-2])$/gm;
 
     if (cleaned.length > 2) {
       cleaned = cleaned.slice(0, 2) + "/" + cleaned.slice(2, 4);
@@ -51,7 +58,9 @@ export function Payment() {
     if (cleaned.length > 5) {
       cleaned = cleaned.slice(0, 5);
     }
-
+    if (!regexMonth.test(cleaned) && cleaned.length === 2) {
+      cleaned = "0" + cleaned.slice(0, 1) + "/" + cleaned.slice(1);
+    }
     setDate(cleaned);
   }
 
@@ -64,9 +73,23 @@ export function Payment() {
     setName(nameOnlyLetters);
   }
 
+  function handleCalculateCodeConfig() {
+    const codeName = cardInfo.code.name;
+    const codeLength = cardInfo.code.size;
+    setCodeName(codeName);
+    setCodeLength(codeLength);
+  }
+
+  function handleCalculateNumberLength() {
+    const lengthsRange = cardInfo.lengths;
+    const maxLength = lengthsRange[lengthsRange.length - 1];
+    setNumberLength(maxLength);
+  }
+
   function handleCardNumberInput(cardNumberValue: string) {
     const cardNumberOnlyNumbers = cardNumberValue.replace(/[^0-9]/g, "");
-    getCreditCardType(cardNumberOnlyNumbers);
+    handleCalculateNumberLength();
+    handleCalculateCodeConfig();
     setNumber(cardNumberOnlyNumbers);
   }
 
@@ -77,8 +100,8 @@ export function Payment() {
           cardSide={cardSide}
           data={{
             cardName,
-            name: name.toUpperCase(),
-            number: number.replace(/(\d{4})(?=\d)/g, "$1 "),
+            name,
+            number,
             date,
             code,
           }}
@@ -93,7 +116,7 @@ export function Payment() {
             placeholder="Número do cartão"
             inputMode="numeric"
             keyboardType="numeric"
-            maxLength={16}
+            maxLength={numberLength}
             onFocus={showBackCard}
             onChangeText={handleCardNumberInput}
             value={number}
@@ -109,7 +132,15 @@ export function Payment() {
               onChangeText={handleMaskDateInput}
               value={date}
             />
-            <Input placeholder="123" keyboardType="numeric" inputMode="numeric" maxLength={3} style={styles.inputSmall} onFocus={showBackCard} onChangeText={setCode} />
+            <Input
+              placeholder={codeName}
+              keyboardType="numeric"
+              inputMode="numeric"
+              maxLength={codeLength}
+              style={styles.inputSmall}
+              onFocus={showBackCard}
+              onChangeText={setCode}
+            />
           </View>
         </View>
       </View>
