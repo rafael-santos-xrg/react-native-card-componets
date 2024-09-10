@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     width: "15%",
     height: 40,
     backgroundColor: "#8795A0",
-    borderRadius: 8,
+    borderRadius: 8 ,
   },
   cardLine: {
     top: 40,
@@ -52,21 +52,21 @@ export const styles = StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: "bold",
+    display: "flex",
+    justifyContent: "center",
+    alignSelf: "center",
   },
   footer: {
     padding: 24,
     flexDirection: "row",
     justifyContent: "space-between",
+    display: "flex",
+    alignContent: "center",
   },
   flag: {
-    flexDirection: "row",
-    gap: -12,
-  },
-  red: {
-    backgroundColor: "red",
-  },
-  orange: {
-    backgroundColor: "orange",
+    display: "flex",
+    justifyContent: "center",
+    alignContent: "center",
   },
   label: {
     fontSize: 12,

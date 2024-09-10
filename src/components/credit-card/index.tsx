@@ -3,6 +3,9 @@ import { View, Text } from "react-native";
 import { styles } from "./styles";
 import Animated, { SharedValue, interpolate, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { getCreditCardType } from "@/models/creditCardSpec";
+import CardLogo from "./card-logo";
+import { useTheme } from "@/context/ThemeContext";
+import { useEffect } from "react";
 
 export enum CARD_SIDE {
   front = 0,
@@ -21,6 +24,17 @@ type CreditCardProps = {
 };
 
 export function CreditCard({ cardSide, data }: CreditCardProps) {
+  const { theme, handleSetTheme } = useTheme();
+
+  console.log(data.number.length);
+
+  const cardType = getCreditCardType(data.number);
+
+  useEffect(() => {
+    if (data.number.length < 1) return handleSetTheme("none");
+    handleSetTheme(cardType.type);
+  }, [cardType]);
+
   function insertSpaces(targetString: string, gapsList: number[]) {
     let result = targetString;
     gapsList.forEach((gap, index) => {
@@ -33,10 +47,11 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
   }
   const normalizedName = () => {
     return data.name.toUpperCase();
+    return "VICTOR R M SANTOS".toUpperCase();
   };
 
   const normalizedNumber = () => {
-    const cardGaps = getCreditCardType(data.number).gaps;
+    const cardGaps = cardType.gaps;
     return insertSpaces(data.number, cardGaps);
   };
 
@@ -66,38 +81,46 @@ export function CreditCard({ cardSide, data }: CreditCardProps) {
 
   return (
     <View>
-      <Animated.View style={[styles.card, styles.front, frontAnimatedStyles]}>
+      <Animated.View
+        style={[
+          styles.card,
+          styles.front,
+          frontAnimatedStyles,
+          {
+            backgroundColor: theme.backgroundFrontColor,
+          },
+        ]}
+      >
         <View style={styles.header}>
           <Text>{data.cardName}</Text>
         </View>
-        <View style={[styles.chip]} />
+        <View style={[styles.chip, { backgroundColor: theme.chipColor }]} />
         <View style={styles.footer}>
-          <Text style={styles.name}>{normalizedName()}</Text>
+          <Text style={[styles.name, { color: theme.textColor }]}>{normalizedName()}</Text>
 
           <View style={styles.flag}>
-            <View style={[styles.circle, styles.red]} />
-            <View style={[styles.circle, styles.orange]} />
+            <CardLogo cardFlagName={data.number.length >= 1 ? cardType.type : "none"} />
           </View>
         </View>
       </Animated.View>
 
-      <Animated.View style={[styles.card, styles.back, backAnimatedStyles]}>
-        <View style={styles.cardLine} />
+      <Animated.View style={[styles.card, styles.back, backAnimatedStyles, { backgroundColor: theme.backgroundBackColor }]}>
+        <View style={[styles.cardLine, { backgroundColor: theme.lineColor }]} />
 
         <View style={styles.footer}>
           <View>
-            <Text style={styles.label}>Número do cartão</Text>
-            <Text style={styles.value}>{normalizedNumber()}</Text>
+            <Text style={[styles.label, { color: theme.labelColor }]}>Número do cartão</Text>
+            <Text style={[styles.value, { color: theme.textColor }]}>{normalizedNumber()}</Text>
           </View>
 
           <View>
-            <Text style={styles.label}>Validade</Text>
-            <Text style={styles.value}>{data.date}</Text>
+            <Text style={[styles.label, { color: theme.labelColor }]}>Validade</Text>
+            <Text style={[styles.value, { color: theme.textColor }]}>{data.date}</Text>
           </View>
 
           <View>
-            <Text style={styles.label}>CVV</Text>
-            <Text style={styles.value}>{data.code}</Text>
+            <Text style={[styles.label, { color: theme.labelColor }]}>CVV</Text>
+            <Text style={[styles.value, { color: theme.textColor }]}>{data.code}</Text>
           </View>
         </View>
       </Animated.View>

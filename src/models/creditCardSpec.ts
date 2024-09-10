@@ -1,7 +1,10 @@
-import creditCardType from "credit-card-type";
+import creditCardType, { types } from "credit-card-type";
+import { CreditCardTypeCardBrandId } from "credit-card-type/dist/types";
+import { CardFlags } from "./cardLogoEnum";
+// import { CardFlags } from "./cardLogoEnum";
 
-interface getCreditCardTypeReturn {
-  type: string;
+export interface getCreditCardTypeReturn {
+  type: CardFlags;
   gaps: number[];
   lengths: number[];
   code: {
@@ -25,5 +28,5 @@ export const getCreditCardType = (creditCardNumber: string): getCreditCardTypeRe
   }
   const { type, gaps, lengths, code } = cardInformationMatches[0];
   const cardInformationFirstMatch = { type, gaps, lengths, code };
-  return cardInformationFirstMatch;
+  return cardInformationFirstMatch as getCreditCardTypeReturn;
 };
